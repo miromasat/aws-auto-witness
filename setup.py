@@ -20,6 +20,17 @@ setuptools.setup(
 
     install_requires=[
         "aws-cdk.core",
+        "aws-cdk.aws-stepfunctions",
+        "aws-cdk.aws-stepfunctions-tasks",
+        "aws_cdk.aws_s3",
+        "aws_cdk.aws_s3_deployment",
+        "aws_cdk.aws_dynamodb",
+        "aws_cdk.aws_lambda",
+        "aws_cdk.aws_apigatewayv2",
+        "aws_cdk.aws_events",
+        "aws_cdk.aws_events_targets",
+        "aws_cdk.aws_eventschemas"
+
     ],
 
     python_requires=">=3.6",
