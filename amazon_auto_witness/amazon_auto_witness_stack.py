@@ -1,4 +1,4 @@
-from aws_cdk import core, aws_dynamodb
+from aws_cdk import core, aws_dynamodb, aws_s3
 
 
 class AmazonAutoWitnessStack(core.Stack):
