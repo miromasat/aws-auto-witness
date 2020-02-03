@@ -1,7 +1,0 @@
-README.md
-setup.py
-amazon_auto_witness/amazon_auto_witness.egg-info/PKG-INFO
-amazon_auto_witness/amazon_auto_witness.egg-info/SOURCES.txt
-amazon_auto_witness/amazon_auto_witness.egg-info/dependency_links.txt
-amazon_auto_witness/amazon_auto_witness.egg-info/requires.txt
-amazon_auto_witness/amazon_auto_witness.egg-info/top_level.txt
