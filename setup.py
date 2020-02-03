@@ -9,11 +9,11 @@ setuptools.setup(
     name="amazon_auto_witness",
     version="0.0.1",
 
-    description="An empty CDK Python app",
+    description="Spatial Query Engine based on AWS Rekognition, Amazon S3, AWS Step Functions and Amazon Timestream",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    author="author",
+    author="Miro Masat",
 
     package_dir={"": "amazon_auto_witness"},
     packages=setuptools.find_packages(where="amazon_auto_witness"),
