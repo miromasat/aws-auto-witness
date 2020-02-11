@@ -1,4 +1,4 @@
-from aws_cdk import core, aws_dynamodb, aws_s3
+from aws_cdk import core, aws_dynamodb, aws_s3, aws_athena
 
 
 class AmazonAutoWitnessStack(core.Stack):
@@ -7,5 +7,12 @@ class AmazonAutoWitnessStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
 
+        archive = aws_s3.Bucket(self, 
+                                        id='_archive')
+        datastore = aws_s3.Bucket(self, 
+                                        id='_datastore')
 
-        # The code that defines your stack goes here
+        configuration = aws_dynamodb.Table(self,    id='_configuration', 
+                                                    table_name='witness_configuration', 
+                                                    partition_key=aws_dynamodb.Attribute(name='parameter', type='STRING'))
+        
