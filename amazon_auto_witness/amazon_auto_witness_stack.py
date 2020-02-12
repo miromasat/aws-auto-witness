@@ -1,5 +1,4 @@
-from aws_cdk import core, aws_dynamodb, aws_s3, aws_athena, aws_stepfunctions, aws_lambda
-
+from aws_cdk import (core, aws_s3, aws_dynamodb, aws_lambda, aws_stepfunctions, aws_stepfunctions_tasks as aws_tasks)
 
 class AmazonAutoWitnessStack(core.Stack):
 
@@ -8,36 +7,45 @@ class AmazonAutoWitnessStack(core.Stack):
 
 
         archive = aws_s3.Bucket(self, 
-                                                    id='_archive')
+                                                    id='_archive', )
         data = aws_s3.Bucket(self, 
                                                     id='_data')
         clips = aws_s3.Bucket(self, 
                                                     id='_clips')                                
         preferences = aws_dynamodb.Table(self,      id='_preferences', 
                                                     table_name='witness_preferences', 
-                                                    partition_key=aws_dynamodb.Attribute(name='preference_name', type='STRING'))
+                                                    partition_key=aws_dynamodb.Attribute(name='preference_name', type=aws_dynamodb.AttributeType.STRING))
         
         # space for athena manifests and queries
 
-        # space for stepfunction
-        orchestrator = aws_stepfunctions.StateMachine(self,
-                                                    id='_orchestrator',
-                                                    state_machine_name='witness_orchestrator')
+        
         # space for feeder Lambda function
         feeder = aws_lambda.Function(self,
                                                     id='_feeder',
-                                                    code='return True',
+                                                    code=aws_lambda.Code.from_inline('pass;'),
                                                     handler='function.py',
-                                                    runtime='python3.7',
+                                                    runtime=aws_lambda.Runtime.PYTHON_3_7,
                                                     description='Feeder function for the Witness project')
 
         # space for saver Lambda function
         saver = aws_lambda.Function(self,
-                                                    id='saver',
-                                                    code='return True',
+                                                    id='_saver',
+                                                    code=aws_lambda.Code.from_inline('pass;'),
                                                     handler='function.py',
-                                                    runtime='python3.7',
+                                                    runtime=aws_lambda.Runtime.PYTHON_3_7,
                                                     description='Saver function for the Witness project')
+        
+        # space for stepfunction
+        feederTask = aws_stepfunctions.Task(        self,
+                                                    id='_feederTask',
+                                                    task=aws_tasks.InvokeFunction(feeder))
+
+        definition = feederTask
+
+        orchestrator = aws_stepfunctions.StateMachine(self,
+                                                    id='_orchestrator',
+                                                    state_machine_name='witness_orchestrator',
+                                                    definition=definition)
 
         # space for sagemaker notebook
 
