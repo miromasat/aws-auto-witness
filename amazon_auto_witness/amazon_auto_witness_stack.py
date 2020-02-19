@@ -40,7 +40,11 @@ class AmazonAutoWitnessStack(core.Stack):
                                                     id='_feederTask',
                                                     task=aws_tasks.InvokeFunction(feeder))
 
-        definition = feederTask
+        saverTask = aws_stepfunctions.Task(         self,
+                                                    id='_saverTask',
+                                                    task=aws_tasks.InvokeFunction(saver))                                            
+
+        definition = feederTask.next(saverTask)
 
         orchestrator = aws_stepfunctions.StateMachine(self,
                                                     id='_orchestrator',
