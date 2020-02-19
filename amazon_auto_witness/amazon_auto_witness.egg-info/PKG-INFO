@@ -1,69 +1,26 @@
 Metadata-Version: 2.1
 Name: amazon-auto-witness
 Version: 0.0.1
-Summary: An empty CDK Python app
+Summary: Spatial Query Engine based on AWS Rekognition, Amazon S3, AWS Step Functions and Amazon Timestream
 Home-page: UNKNOWN
-Author: author
+Author: Miro Masat
 License: UNKNOWN
 Description: 
-        # Welcome to your CDK Python project!
+        # Welcome to AutoWitness
+        ### Spatial Query Engine based on AWS Rekognition, Amazon S3, AWS Step Functions and Amazon Timestream
         
-        This is a blank project for Python development with CDK.
+        - to set up an infrsatructure, follow [https://github.com/aws-samples/aws-cdk-examples#Python]
         
-        The `cdk.json` file tells the CDK Toolkit how to execute your app.
-        
-        This project is set up like a standard Python project.  The initialization
-        process also creates a virtualenv within this project, stored under the .env
-        directory.  To create the virtualenv it assumes that there is a `python3`
-        (or `python` for Windows) executable in your path with access to the `venv`
-        package. If for any reason the automatic creation of the virtualenv fails,
-        you can create the virtualenv manually.
-        
-        To manually create a virtualenv on MacOS and Linux:
-        
-        ```
-        $ python3 -m venv .env
-        ```
-        
-        After the init process completes and the virtualenv is created, you can use the following
-        step to activate your virtualenv.
-        
-        ```
-        $ source .env/bin/activate
-        ```
-        
-        If you are a Windows platform, you would activate the virtualenv like this:
-        
-        ```
-        % .env\Scripts\activate.bat
-        ```
-        
-        Once the virtualenv is activated, you can install the required dependencies.
-        
-        ```
-        $ pip install -r requirements.txt
-        ```
-        
-        At this point you can now synthesize the CloudFormation template for this code.
-        
-        ```
-        $ cdk synth
-        ```
-        
-        To add additional dependencies, for example other CDK libraries, just add
-        them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-        command.
-        
-        ## Useful commands
-        
-         * `cdk ls`          list all stacks in the app
-         * `cdk synth`       emits the synthesized CloudFormation template
-         * `cdk deploy`      deploy this stack to your default AWS account/region
-         * `cdk diff`        compare deployed stack with current state
-         * `cdk docs`        open CDK documentation
-        
-        Enjoy!
-        
+        ## Architecture Diagram can be found below:
+        ![AutoWitness Architecture](AutoWitnessArchitectureEXPORT.png?raw=true "AutoWitness Architecture")
+        ### The mechanics of the architecture are described below:
+        1. Architecture awaits ingestion into `Archive` S3 bucket either from the video archive or from live cameras. Videos need to land in `Archive` S3 bucket in one of supported formats.
+        2. `Archive` S3 bucket upon the object landing triggers a notification to `Feeder` Lambda function that lies within `Orchestrator` Step Function Workflow that kicks in and manages the rest of the labelling and storing the result.
+        3. `Feeder` Lambda function reads and loads `Preferences` DynamoDB table, that describes, what is required of the `Label` Rekognition task and what metadata should be tracked and recorded.
+        4. `Label` Rekognition task runs and returns the finished metadata and spatial representation of the scene to the `Saver` Lambda function.
+        5. `Saver` Lambda function populates `Data` S3 bucket with searchable metadata and `Clip` S3 bucket with processed video clips that contain features only.
+        6. `Witness` SageMaker Notebook is set up and equipped with all libraries that allow to consume and query both `Data` S3 bucket and `Clips` S3 bucket.
+        7. Customer can access this on-demand `Witness` SageMaker Notebook to query, preview, manipulate or channel both processed video clips and metadata into further ML pipelines and/or simulations. 
 Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers

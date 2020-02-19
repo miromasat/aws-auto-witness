@@ -1,4 +1,4 @@
-from aws_cdk import (core, aws_s3, aws_dynamodb, aws_lambda, aws_stepfunctions, aws_stepfunctions_tasks as aws_tasks)
+from aws_cdk import (core, aws_s3, aws_dynamodb, aws_lambda, aws_stepfunctions, aws_stepfunctions_tasks as aws_tasks, aws_s3_notifications as s3n)
 
 class AmazonAutoWitnessStack(core.Stack):
 
@@ -7,7 +7,7 @@ class AmazonAutoWitnessStack(core.Stack):
 
 
         archive = aws_s3.Bucket(self, 
-                                                    id='_archive', )
+                                                    id='_archive', )              
         data = aws_s3.Bucket(self, 
                                                     id='_data')
         clips = aws_s3.Bucket(self, 
@@ -22,19 +22,28 @@ class AmazonAutoWitnessStack(core.Stack):
         # space for feeder Lambda function
         feeder = aws_lambda.Function(self,
                                                     id='_feeder',
-                                                    code=aws_lambda.Code.from_inline('pass;'),
-                                                    handler='function.py',
+                                                    code=aws_lambda.Code.asset('./code'),
+                                                    handler='feeder.handler',
                                                     runtime=aws_lambda.Runtime.PYTHON_3_7,
                                                     description='Feeder function for the Witness project')
 
         # space for saver Lambda function
         saver = aws_lambda.Function(self,
                                                     id='_saver',
-                                                    code=aws_lambda.Code.from_inline('pass;'),
-                                                    handler='function.py',
+                                                    code=aws_lambda.Code.asset('./code'),
+                                                    handler='saver.handler',
                                                     runtime=aws_lambda.Runtime.PYTHON_3_7,
                                                     description='Saver function for the Witness project')
-        
+        # space for feeder lambda trigger
+        archive.add_event_notification(aws_s3.EventType.OBJECT_CREATED_PUT, s3n.LambdaDestination(feeder))
+
+        # space for feeder lambda permissions
+        preferences.grant_read_data(feeder)
+
+        # space for saver lambda permissions
+        data.grant_put(saver)
+        clips.grant_put(saver)
+
         # space for stepfunction
         feederTask = aws_stepfunctions.Task(        self,
                                                     id='_feederTask',

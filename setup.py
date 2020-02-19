@@ -24,6 +24,7 @@ setuptools.setup(
         "aws-cdk.aws-stepfunctions-tasks",
         "aws_cdk.aws_s3",
         "aws_cdk.aws_s3_deployment",
+        "aws_cdk.aws_s3_notifications",
         "aws_cdk.aws_dynamodb",
         "aws_cdk.aws_lambda",
         "aws_cdk.aws_apigatewayv2",
