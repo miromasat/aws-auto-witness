@@ -7,7 +7,7 @@ with open("README.md") as fp:
 
 setuptools.setup(
     name="amazon_auto_witness",
-    version="0.0.1",
+    version="0.0.2",
 
     description="Spatial Query Engine based on AWS Rekognition, Amazon S3, AWS Step Functions and Amazon Timestream",
     long_description=long_description,
@@ -15,8 +15,8 @@ setuptools.setup(
 
     author="Miro Masat",
 
-    package_dir={"": "amazon_auto_witness"},
-    packages=setuptools.find_packages(where="amazon_auto_witness"),
+    package_dir={"": "cdk"},
+    packages=setuptools.find_packages(where="cdk"),
 
     install_requires=[
         "aws-cdk.core",

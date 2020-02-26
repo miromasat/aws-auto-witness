@@ -2,11 +2,16 @@
 
 from aws_cdk import core
 
-from amazon_auto_witness.amazon_auto_witness_stack import AmazonAutoWitnessStack
+from cdk.storage import Storage
+from cdk.compute import Computes
+from cdk.ml import Ml
 
 #app > stack(s) > constructs
 
 app = core.App()
-AmazonAutoWitnessStack(app, "amazon-auto-witness")
+Storage(app, "witness-storage")
+Compute(app, "witness-compute")
+Ml(app, "witness-ml")
+
 
 app.synth()

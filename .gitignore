@@ -35,3 +35,5 @@ yarn-error.log
 
 AutoWitnessArchitectureEXPORT.pdf
 AutoWitnessArchitectureRAW.pptx
+
+.env/
